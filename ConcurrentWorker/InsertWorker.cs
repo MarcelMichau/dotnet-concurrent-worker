@@ -40,7 +40,7 @@ public class InsertWorker : BackgroundService
     {
         _logger.LogInformation("DoInserts executed at: {time}, Thread ID: {threadId}", DateTimeOffset.Now, Environment.CurrentManagedThreadId);
 
-        var scope = _serviceProvider.CreateScope();
+        using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<UserContext>();
 
         var stopwatch = new Stopwatch();
