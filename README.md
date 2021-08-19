@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is a playground for testing bulk concurrent operations with Entity Framework Core to gauge performance & potential issues that may occur.
+This project is a playground for testing bulk concurrent operations with Entity Framework Core to gauge performance & spot potential issues that may occur.
 
 ## Prerequisites
 - Visual Studio 2022
