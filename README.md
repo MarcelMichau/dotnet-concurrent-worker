@@ -6,7 +6,7 @@ This project is a playground for testing bulk concurrent operations with Entity 
 
 ## Prerequisites
 - Visual Studio 2022
-- .NET 6 SDK
+- .NET 8 SDK
 - Docker
 
 ## Running Example
