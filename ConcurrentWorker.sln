@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentWorker", "ConcurrentWorker\ConcurrentWorker.csproj", "{3C02B9D4-B3B4-4020-976F-D5789D3BE4E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcurrentWorker", "ConcurrentWorker\ConcurrentWorker.csproj", "{3C02B9D4-B3B4-4020-976F-D5789D3BE4E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

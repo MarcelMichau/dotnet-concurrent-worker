@@ -1,7 +1,9 @@
 using ConcurrentWorker;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-IHost host = Host.CreateDefaultBuilder(args)
+var host = Host.CreateDefaultBuilder(args)
     .UseWindowsService(options =>
     {
         options.ServiceName = ".NET Concurrent Worker";
@@ -19,6 +21,7 @@ IHost host = Host.CreateDefaultBuilder(args)
 CreateDbIfNotExists(host);
 
 await host.RunAsync();
+return;
 
 static void CreateDbIfNotExists(IHost host)
 {

@@ -1,30 +1,28 @@
-﻿using Bogus;
-using Bogus.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using Bogus;
 using Bogus.Extensions.UnitedStates;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace ConcurrentWorker;
 
-public class InsertWorker : BackgroundService
+public class InsertWorker(ILogger<CountWorker> logger, IServiceProvider serviceProvider)
+    : BackgroundService
 {
-    private readonly ILogger<CountWorker> _logger;
-    private readonly IServiceProvider _serviceProvider;
-
-    public InsertWorker(ILogger<CountWorker> logger, IServiceProvider serviceProvider)
-    {
-        _logger = logger;
-        _serviceProvider = serviceProvider;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogInformation("InsertWorker running at: {time}", DateTimeOffset.Now);
+            logger.LogInformation("InsertWorker running at: {time}", DateTimeOffset.Now);
 
             try
             {
-                await Parallel.ForEachAsync(new List<int> { 10000, 10000, 10000 }, stoppingToken, async (recordCount, cancellationToken) =>
+                await Parallel.ForEachAsync(new List<int> { 10000, 10000, 10000, 10000, 10000, 10000 }, stoppingToken, async (recordCount, cancellationToken) =>
                 {
                     await DoInserts(recordCount, cancellationToken);
                 });
@@ -38,9 +36,9 @@ public class InsertWorker : BackgroundService
 
     private async Task<IServiceScope> DoInserts(int recordCount, CancellationToken stoppingToken)
     {
-        _logger.LogInformation("DoInserts executed at: {time}, Thread ID: {threadId}", DateTimeOffset.Now, Environment.CurrentManagedThreadId);
+        logger.LogInformation("DoInserts executed at: {time}, Thread ID: {threadId}", DateTimeOffset.Now, Environment.CurrentManagedThreadId);
 
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<UserContext>();
 
         var stopwatch = new Stopwatch();
@@ -49,7 +47,7 @@ public class InsertWorker : BackgroundService
         var testUsers = GenerateUsers(recordCount);
 
         var generationTime = stopwatch.Elapsed;
-        _logger.LogInformation("Generation time ({recordCount}): {generationTime} ms", recordCount, generationTime.TotalMilliseconds);
+        logger.LogInformation("Generation time ({recordCount}): {generationTime} ms", recordCount, generationTime.TotalMilliseconds);
 
         stopwatch.Restart();
 
@@ -57,7 +55,7 @@ public class InsertWorker : BackgroundService
         await context.SaveChangesAsync(stoppingToken);
 
         var insertTime = stopwatch.Elapsed;
-        _logger.LogInformation("Insert time ({recordCount}): {insertTime} ms", recordCount, insertTime.TotalMilliseconds);
+        logger.LogInformation("Insert time ({recordCount}): {insertTime} ms", recordCount, insertTime.TotalMilliseconds);
 
         await Task.Delay(10000, stoppingToken);
         return scope;

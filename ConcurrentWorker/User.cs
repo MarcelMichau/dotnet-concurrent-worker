@@ -1,4 +1,7 @@
-﻿namespace ConcurrentWorker
+﻿using System;
+using System.Collections.Generic;
+
+namespace ConcurrentWorker
 {
     public class User
     {
